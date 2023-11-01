@@ -18,48 +18,55 @@ function start() {
     bot.on('message', async (message) => {
         // console.log(message);
         let req;
+        let namePeopleSend = message.from.first_name + message.from.last_name;
+        let idPeopleSend = message.from.id;
         let chatId = message.chat.id;
         let chatType = message.chat.type;
+        let dataSend = message.date;
+        let textSend = message.text;
         let chatBotId = message.from.id;
 
-        console.log(message);
-        return;
+
         let messageSendTele = "";
         try {
-            if (chatId.toString() == process.env.GROUP_ID_TELE_BALANCE_MASTER && chatType == "group") {
-                var dateTime = Common.convertTimestampToDateTime(message.date);
+            if (chatId.toString() == process.env.GROUP_ID_TELE_BALANCE_MASTER && chatType == "supergroup") {
+                var dateTime = Common.convertTimestampToDateTime(dataSend);
 
                 // xử lý text
-                req = { ...handelMessage(message.text), time: dateTime };
-                let res = await Excel.insert(req);
-                messageSendTele = handelResponse(res);
+                req = { ...handelMessage(textSend), idPeopleSend, namePeopleSend, dateTime };
+                console.log(req);
+                // let res = await Excel.insert(req);
+                // messageSendTele = handelResponse(res);
             }
         } catch (error) {
             messageSendTele = error.message;
         } finally {
             console.log(messageSendTele);
-            bot.sendMessage(chatId, messageSendTele);
+            // bot.sendMessage(chatId, messageSendTele);
         }
     })
 }
 
 function handelMessage(reqStr) {
     reqStr = reqStr.trim();
-    console.log(reqStr);
-    // Sử dụng biểu thức chính quy để tìm tiêu đề, nội dung và mô tả
-    const match = reqStr.match(/^\/([^ ]+) ([^\.]+)(?:\.(.+))?$/);
-    console.log(match);
+    const firstDotIndex = reqStr.indexOf('.');
+    const mainPart = firstDotIndex !== -1 ? reqStr.slice(0, firstDotIndex) : reqStr;
 
-    if (match) {
-        // match[1] chứa tiêu đề, match[2] chứa nội dung, match[3] chứa mô tả
-        const reqObj = {
-            title: match[1],
-            content: match[2],
-            describe: match[3] || ""
+    const [maSP, noiXuat, soLuong, noiNhap] = mainPart.split(/\s+/);
+
+    const ghiChu = firstDotIndex !== -1 ? reqStr.slice(firstDotIndex + 1).trim() : ""; // Ghi chú có thể rỗng
+
+    if (maSP && noiXuat && soLuong) {
+        const resultObject = {
+            maSP,
+            noiXuat,
+            soLuong: parseInt(soLuong), // Chuyển đổi chuỗi số thành số nguyên
+            noiNhap: noiNhap || "", // Nơi nhập có thể rỗng
+            ghiChu: ghiChu || "", // Ghi chú có thể rỗng
         };
-        return handelContent(reqObj);
+        return handelContent(resultObject);
     } else {
-        throw Error("Sai cú pháp! Không thể tìm thấy tiêu đề và nội dung.");
+        throw Error("Chuỗi không khớp với mẫu.");
     }
 }
 

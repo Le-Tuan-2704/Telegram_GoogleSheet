@@ -12,12 +12,30 @@ const multiplierUnit = {
     'tra_no': 1
 };
 
-const enumAdress = {
+const enumAddress = {
     'k': 'Kho',
     'n': 'Nhà'
 }
 
+const columnHistProduct = {
+
+}
+
+const columnListProduct = {
+
+}
+
+const formatMessage = '(Mã sản phẩm) (nơi xuất) (số lượng) (nơi nhập). (ghi chú)\
+                        \ntrong đó "nơi xuất" và "nơi nhập": "k hoặc n"\
+                        \n"số lượng": - xuất, + nhập\
+                        \n"nơi nhập" và "ghi chú" có thể rổng\
+                        \n ví dụ: M01 k -3 n. Ghi chú';
+
 module.exports = {
     multiplier,
-    multiplierUnit
+    multiplierUnit,
+    enumAddress,
+    formatMessage,
+    columnHistProduct,
+    columnListProduct
 }

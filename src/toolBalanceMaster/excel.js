@@ -24,7 +24,7 @@ async function get(params) {
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: process.env.SHEET_NAME_BALANCE_MASTER,
+        range: process.env.SHEET_BALANCE_MASTER,
     })
 
     return getRows.data;
@@ -35,7 +35,7 @@ async function insert(params) {
     const insertRows = await googleSheets.spreadsheets.values.append({
         auth,
         spreadsheetId,
-        range: process.env.SHEET_NAME_BALANCE_MASTER + "!A:C",
+        range: process.env.SHEET_BALANCE_MASTER + "!A:C",
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [
@@ -47,7 +47,7 @@ async function insert(params) {
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: process.env.SHEET_NAME_BALANCE_MASTER + "!A2:C2",
+        range: process.env.SHEET_BALANCE_MASTER + "!A2:C2",
     })
 
     return getRows.data;

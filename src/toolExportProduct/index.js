@@ -23,9 +23,9 @@ function start() {
         let dataSend = message.date;
         let textSend = message.text.trim();
         let chatBotId = message.from.id;
-        try {
-            let messageSendTele = "";
 
+        let messageSendTele = "";
+        try {
             if (chatId.toString() == process.env.GROUP_ID_TELE_EXPORT_PRODUCT && chatType == "supergroup") {
                 let res = null;
                 switch (textSend) {
@@ -33,7 +33,7 @@ function start() {
                         messageSendTele = Enum.formatMessage;
                         break;
                     case "thongke":
-                        res = await Excel.getHist("");
+                        res = await getProduct(null);
                         messageSendTele = JSON.stringify(res);
                         break;
                     default:
@@ -54,6 +54,21 @@ function start() {
             bot.sendMessage(chatId, messageSendTele);
         }
     })
+}
+
+async function getProduct(req) {
+    let rows = await Excel.get("");
+    let response = null;
+    if (req.maSanPham) {
+        response = rows.filter(function (iRow) {
+            if (iRow[0] == req.maSanPham) {
+                return iRow;
+            };
+        });
+    } else {
+        response = rows;
+    }
+    return response;
 }
 
 async function updateProduct(req) {
@@ -123,15 +138,6 @@ function handelMessage(reqStr) {
     } else {
         throw Error("Chuỗi không khớp với mẫu.");
     }
-}
-
-
-function handelResponse(params) {
-    let res = params.values[0];
-    let totalRow = res[0];
-    let amountMoney = Common.convertMoney(Number(res[1]));
-
-    return `totalRow = ${totalRow} \n amountMoney = ${amountMoney}`;
 }
 
 

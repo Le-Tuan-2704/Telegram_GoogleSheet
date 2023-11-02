@@ -3,12 +3,12 @@ class ProductList {
         this.maSanPham = maSanPham || "";
         this.tenSanPham = tenSanPham || "";
         this.maSanPhamQT = maSanPhamQT || "";
-        this.soLuongKho = soLuongKho || 0;
-        this.soLuongNha = soLuongNha || 0;
-        this.soLuongChuyenKho = soLuongChuyenKho || 0;
-        this.soLuongXuatNgoai = soLuongXuatNgoai || 0;
-        this.soLuongConLai = soLuongConLai || 0;
-        this.soLuongTong = soLuongTong || 0;
+        this.soLuongKho = parseInt(soLuongKho) || 0;
+        this.soLuongNha = parseInt(soLuongNha) || 0;
+        this.soLuongChuyenKho = parseInt(soLuongChuyenKho) || 0;
+        this.soLuongXuatNgoai = parseInt(soLuongXuatNgoai) || 0;
+        this.soLuongConLai = parseInt(soLuongConLai) || 0;
+        this.soLuongTong = parseInt(soLuongTong) || 0;
     }
 }
 

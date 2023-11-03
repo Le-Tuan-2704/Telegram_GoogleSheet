@@ -11,6 +11,15 @@ function formatTime(date) {
     return hours + ':' + minutes + ':' + seconds;
 }
 
+function get_CurrentDate() {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const year = today.getFullYear();
+
+    return `${day}_${month}_${year}`;
+}
+
 function convertTimestampToDateTime(params) {
     var date = new Date(params * 1000);
     var dt = formatDate(date) + ' ' + formatTime(date);
@@ -45,4 +54,7 @@ module.exports = {
     convertTimestampToDateTime,
     cupStringAndNumber,
     convertMoney,
+    formatDate,
+    formatTime,
+    get_CurrentDate,
 }

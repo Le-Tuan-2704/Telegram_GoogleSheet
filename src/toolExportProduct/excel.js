@@ -1,4 +1,5 @@
 const { google } = require("googleapis");
+const { ProductList, ProductHist } = require("./model");
 require('dotenv').config();
 
 let auth;
@@ -34,7 +35,18 @@ async function getHist(index = "") {
         range: process.env.SHEET_EXPORT_PRODUCT_HIST + "!A" + index + ":" + histLastColomn + index,
     })
 
-    return getRows.data.values;
+    let productHistArray = getRows.data.values;
+    if (productHistArray.length > 1) {
+        productHistArray.shift();
+    }
+
+    // Tạo mảng đối tượng từ mảng productHist
+    const productHistList = productHistArray.map(row => {
+        const [maSanPham, diaChi1, soLuong, diaChi2, ghiChu, idNguoiNhap, nguoiNhap, thoiGian] = row;
+        return new ProductHist(maSanPham, diaChi1, soLuong, diaChi2, ghiChu, idNguoiNhap, nguoiNhap, thoiGian);
+    });
+
+    return productHistList;
 }
 
 async function insertHist(params) {
@@ -59,7 +71,18 @@ async function get(index = "") {
         range: process.env.SHEET_EXPORT_PRODUCT_LIST + "!A" + index + ":" + listLastColomn + index,
     })
 
-    return getRows.data.values;
+    let productArray = getRows.data.values;
+    if (productArray.length > 1) {
+        productArray.shift();
+    }
+
+    // Tạo mảng đối tượng từ mảng productList
+    let productList = productArray.map(row => {
+        const [maSanPham, tenSanPham, maSanPhamQT, soLuongKho, soLuongNha, soLuongChuyenKho, soLuongXuatNgoai, soLuongConLai, soLuongTong] = row;
+        return new ProductList(maSanPham, tenSanPham, maSanPhamQT, soLuongKho, soLuongNha, soLuongChuyenKho, soLuongXuatNgoai, soLuongConLai, soLuongTong);
+    });
+
+    return productList;
 }
 
 async function insert(params) {
@@ -78,6 +101,7 @@ async function insert(params) {
 }
 
 async function update(index, object) {
+
     // Write row(s) to spreadsheet
     const insertRows = await googleSheets.spreadsheets.values.update({
         auth,

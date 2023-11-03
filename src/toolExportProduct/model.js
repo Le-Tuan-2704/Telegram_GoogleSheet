@@ -13,9 +13,10 @@ class ProductList {
 }
 
 class ProductHist {
-    constructor(diaChi1, soLuong, diaChi2, ghiChu, idNguoiNhap, nguoiNhap, thoiGian) {
+    constructor(maSanPham, diaChi1, soLuong, diaChi2, ghiChu, idNguoiNhap, nguoiNhap, thoiGian) {
+        this.maSanPham = maSanPham || "";
         this.diaChi1 = diaChi1 || "";
-        this.soLuong = soLuong || 0;
+        this.soLuong = parseInt(soLuong) || 0;
         this.diaChi2 = diaChi2 || "";
         this.ghiChu = ghiChu || "";
         this.idNguoiNhap = idNguoiNhap || "";

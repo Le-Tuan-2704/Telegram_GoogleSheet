@@ -22,8 +22,7 @@ function start() {
         let chatType = message.chat.type;
         let chatBotId = message.from.id;
 
-        console.log(message);
-        return;
+
         let messageSendTele = "";
         try {
             if (chatId.toString() == process.env.GROUP_ID_TELE_BALANCE_MASTER && chatType == "group") {

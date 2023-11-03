@@ -17,14 +17,6 @@ const enumAddress = {
     'n': 'Nhà'
 }
 
-const columnHistProduct = {
-
-}
-
-const columnListProduct = {
-
-}
-
 const formatMessage = '(Mã sản phẩm) (nơi xuất) (số lượng) (nơi nhập). (ghi chú)\
                         \ntrong đó "nơi xuất" và "nơi nhập": "k hoặc n"\
                         \n"số lượng": - xuất, + nhập\
@@ -35,7 +27,5 @@ module.exports = {
     multiplier,
     multiplierUnit,
     enumAddress,
-    formatMessage,
-    columnHistProduct,
-    columnListProduct
+    formatMessage
 }

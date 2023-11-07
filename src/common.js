@@ -26,15 +26,20 @@ function convertTimestampToDateTime(params) {
     return dt;
 }
 
-function cupStringAndNumber(chuoi) {
-    // Loại bỏ dấu cách
-    chuoi = chuoi.replace(/\s/g, '');
+function separateTextAndNumber(inputString) {
+    const match = inputString.match(/([a-zA-Z]*)([+-]?\d+(\.\d+)?)?/);
 
-    // Tách chữ và số
-    var phanChu = chuoi.replace(/[0-9]/g, '');
-    var phanSo = parseInt(chuoi.replace(/\D/g, ''), 10);
+    if (match) {
+        const str = match[1] || "";  // Chữ
+        const num = match[2] ? parseFloat(match[2]) : 0;  // Số
 
-    return { str: phanChu, num: phanSo };
+        return {
+            str: str,
+            num: num
+        };
+    } else {
+        throw Error("Không thể tách chữ và số từ chuỗi.");
+    }
 }
 
 function convertMoney(amount) {
@@ -52,7 +57,7 @@ function convertMoney(amount) {
 
 module.exports = {
     convertTimestampToDateTime,
-    cupStringAndNumber,
+    separateTextAndNumber,
     convertMoney,
     formatDate,
     formatTime,

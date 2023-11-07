@@ -8,10 +8,10 @@ require('dotenv').config();
 const schedule = require('node-schedule');
 
 let bot;
-let chatId
+let chatId = process.env.GROUP_ID_TELE_EXPORT_PRODUCT;
 
-const job = schedule.scheduleJob('43 17 * * *', function () {
-    console.log("schedule");
+const job = schedule.scheduleJob('0 22 * * *', function () {
+    getProduct('thongke');
 });
 
 function start() {

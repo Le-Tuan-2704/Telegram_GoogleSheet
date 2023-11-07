@@ -27,15 +27,15 @@ function convertTimestampToDateTime(params) {
 }
 
 function separateTextAndNumber(inputString) {
-    const match = inputString.match(/([a-zA-Z]*)([+-]?\d+(\.\d+)?)?/);
+    const match = inputString.match(/^(-?\d+)([a-zA-Z]+)?$/);
 
     if (match) {
-        const str = match[1] || "";  // Chữ
-        const num = match[2] ? parseFloat(match[2]) : 0;  // Số
+        const negativeNumber = match[1];
+        const textPart = match[2] || '';
 
         return {
-            str: str,
-            num: num
+            str: textPart,
+            num: parseInt(negativeNumber)
         };
     } else {
         throw Error("Không thể tách chữ và số từ chuỗi.");

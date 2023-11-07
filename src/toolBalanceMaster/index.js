@@ -65,9 +65,14 @@ async function getBalance(req) {
 
 async function insertBalace(req) {
     await Excel.insert(req);
-    let rowTotal = await Excel.get(2);
+    let rowTotalList = await Excel.get(2);
+    if (rowTotalList.length == 1) {
+        let rowTotal = rowTotalList[0];
+        let totalRow = rowTotal.key;
+        let amountMoney = Common.convertMoney(rowTotal.money);
+        return `totalRow = ${totalRow} \n amountMoney = ${amountMoney}`
+    }
 
-    return `totalRow = ${rowTotal.key} \n amountMoney = ${Common.convertMoney(rowTotal.money)}`
 }
 
 function handelMessage(reqStr) {
@@ -81,7 +86,7 @@ function handelMessage(reqStr) {
     money = convertUnitMoney(money.trim());
 
     const note = firstDotIndex !== -1 ? reqStr.slice(firstDotIndex + 1).trim() : ""; // Ghi chú có thể rỗng
-    let = title;
+    let title;
     [key, title] = convertTitle(key, money);
 
     if (money) {
@@ -141,7 +146,6 @@ function convertTitle(key, money) {
 
 function convertUnitMoney(money) {
     let moneyObj = Common.separateTextAndNumber(money);
-    console.log(moneyObj);
     const moneyStr = moneyObj.str.toLowerCase();
     let moneyNumber;
     if (Enum.multiplier.hasOwnProperty(moneyStr) && moneyObj.num !== 0) {

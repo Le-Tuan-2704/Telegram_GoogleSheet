@@ -10,7 +10,7 @@ let bot;
 let chatId = process.env.GROUP_ID_TELE_EXPORT_PRODUCT;
 
 const job = schedule.scheduleJob('0 22 * * *', function () {
-    getProduct('thongke');
+    getBalance('thongke');
 });
 
 function start() {
@@ -39,16 +39,14 @@ function start() {
                 if (textSend == ".") {
                     messageSendTele = Enum.formatMessBalence;
                     bot.sendMessage(chatId, messageSendTele);
-                } else if (textSend.includes('thongke')) {
+                } else if (textSend.includes('thongke') || textSend.includes('tong')) {
                     res = await getBalance(textSend);
                 } else {
                     var dateTime = Common.convertTimestampToDateTime(dataSend);
                     // xử lý text
                     let req = { ...handelMessage(textSend), dateTime };
 
-                    res = await insertBalace(req);
-
-                    messageSendTele = JSON.stringify(res);
+                    messageSendTele = await insertBalace(req);
                     bot.sendMessage(chatId, messageSendTele);
                 }
             }
@@ -60,7 +58,43 @@ function start() {
 }
 
 async function getBalance(req) {
+    if (req == 'tong') {
+        let rowTotalList = await Excel.get(2);
+        if (rowTotalList.length == 1) {
+            let rowTotal = rowTotalList[0];
+            let totalRow = rowTotal.key;
+            let amountMoney = Common.convertMoney(parseInt(rowTotal.money));
+            let messageSendTele = `totalRow = ${totalRow} \n amountMoney = ${amountMoney}`;
+            bot.sendMessage(chatId, messageSendTele);
+        }
+    } else if (req == 'thongke') {
+        const BalanceHistAll = await Excel.get("");
+        const today = Common.formatDate(new Date());
 
+        let BalanceHistToday = BalanceHistAll.filter(function (obj) {
+            let dateObj = Common.formatDate(new Date(obj.datetime));
+            return dateObj === today;
+        });
+
+        let excelFileName = await SendFile.generateExcel(BalanceHistToday);
+
+        const fileOptions = {
+            filename: excelFileName,
+            contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        };
+
+        bot.sendDocument(chatId, excelFileName);
+    } else if (req == 'thongkeall') {
+        const BalanceHistAll = await Excel.get("");
+
+        let excelFileName = await SendFile.generateExcel(BalanceHistAll);
+
+        const fileOptions = {
+            filename: excelFileName,
+            contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        };
+        bot.sendDocument(chatId, excelFileName);
+    }
 }
 
 async function insertBalace(req) {
@@ -69,10 +103,9 @@ async function insertBalace(req) {
     if (rowTotalList.length == 1) {
         let rowTotal = rowTotalList[0];
         let totalRow = rowTotal.key;
-        let amountMoney = Common.convertMoney(rowTotal.money);
+        let amountMoney = Common.convertMoney(parseInt(rowTotal.money));
         return `totalRow = ${totalRow} \n amountMoney = ${amountMoney}`
     }
-
 }
 
 function handelMessage(reqStr) {
